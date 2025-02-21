@@ -84,15 +84,15 @@ int	main(void)
 	game.mlx = mlx_init();
 	game.mlx_window = mlx_new_window(game.mlx, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, "Map");
 
-	game.wall_img = mlx_xpm_file_to_image(game.mlx, "Brickwall3.xpm", &img_width, &img_height);
-	game.floor_img = mlx_xpm_file_to_image(game.mlx, "Beigewall_Texture.xpm", &img_width, &img_height);
+	game.wall_img = mlx_xpm_file_to_image(game.mlx, "3.xpm", &img_width, &img_height);
+	game.floor_img = mlx_xpm_file_to_image(game.mlx, "black_floor.xpm", &img_width, &img_height);
 	if (!game.wall_img || !game.floor_img)
 	{
 		write(2, "Error\n", 6);
 		return (1);
 	}
 
-	game.player_img = mlx_xpm_file_to_image(game.mlx, "pacman.xpm", &img_width, &img_height);
+	game.player_img = mlx_xpm_file_to_image(game.mlx, "1.xpm", &img_width, &img_height);
 	if (!game.player_img)
 	{
 		write(2, "Error_player\n", 13);
@@ -101,13 +101,13 @@ int	main(void)
 	char temp_map[MAP_HEIGHT][MAP_WIDTH + 1] = {
 		"1111111111",
 		"10P0000001",
-		"1011111101",
+		"1000000001",
 		"1010000101",
 		"1010110101",
 		"1010000101",
 		"1011111101",
 		"1000000001",
-		"1111111111",
+		"1000000001",
 		"1111111111"
 	};
 
