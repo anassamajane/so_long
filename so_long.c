@@ -24,7 +24,8 @@ typedef struct	s_game
 	void	*player_right;
 	void	*player_hit_ground;
 	void	*current_player;
-	void	*door_img;
+	void	*door_frames[4];
+	int	door_frame_index;
 	void	*collectible_img;
 	int	total_collectibles;
 	int	collected;
@@ -55,7 +56,11 @@ int	handle_keypress(int keycode, void *param)
 			game->map[game->player_y][game->player_x] = '0';
 			game->collected++;
 			if (game->collected == game->total_collectibles)
+			{
+				if (game->door_frame_index < 3)
+					game->door_frame_index++;
                 		write(1, "Congrats!\n", 10);
+			}
 		}
 	}
 
@@ -73,7 +78,11 @@ int	handle_keypress(int keycode, void *param)
                         game->map[game->player_y][game->player_x] = '0';
                         game->collected++;
 			if (game->collected == game->total_collectibles)
+			{
+				if (game->door_frame_index < 3)
+					game->door_frame_index++;
                 		write(1, "Congrats!\n", 10);
+			}
                 }
                 
         }
@@ -86,7 +95,11 @@ int	handle_keypress(int keycode, void *param)
                         game->map[game->player_y][game->player_x] = '0';
                         game->collected++;
 			if (game->collected == game->total_collectibles)
+			{
+				if (game->door_frame_index < 3)
+					game->door_frame_index++;
                 		write(1, "Congrats!\n", 10);
+			}
                 }
                 
         }
@@ -99,7 +112,11 @@ int	handle_keypress(int keycode, void *param)
                         game->map[game->player_y][game->player_x] = '0';
                         game->collected++;
 			if (game->collected == game->total_collectibles)
+			{
+				if (game->door_frame_index < 3)
+					game->door_frame_index++;
                 		write(1, "Congrats!\n", 10);
+			}
                 }
         }
 
@@ -123,7 +140,7 @@ void	render_map(t_game *game)
 			else if (game->map[y][x] == 'C')
 				mlx_put_image_to_window(game->mlx, game->mlx_window, game->collectible_img, x * TILE_SIZE, y * TILE_SIZE);
 			else if (game->map[y][x] == 'E')
-				mlx_put_image_to_window(game->mlx, game->mlx_window, game->door_img, x * TILE_SIZE, y * TILE_SIZE);
+				mlx_put_image_to_window(game->mlx, game->mlx_window, game->door_frames[game->door_frame_index], x * TILE_SIZE, y * TILE_SIZE);
 			else
 				mlx_put_image_to_window(game->mlx, game->mlx_window, game->floor_img, x * TILE_SIZE, y * TILE_SIZE);
 			x++;
@@ -132,6 +149,20 @@ void	render_map(t_game *game)
 	}
 	mlx_put_image_to_window(game->mlx, game->mlx_window, game->current_player, game->player_x * TILE_SIZE, game->player_y * TILE_SIZE);
 }
+
+int	animated_door(void *param)
+{
+	t_game	*game = (t_game *)param;
+
+	if (game->collected == game->total_collectibles && game->door_frame_index < 3)
+	{
+		usleep (200000);
+		game->door_frame_index++;
+		render_map(game);
+	}
+	return (0);
+}
+
 int	main(void)
 {
 	t_game	game;
@@ -152,12 +183,17 @@ int	main(void)
 
 	game.player_up = mlx_xpm_file_to_image(game.mlx, "goku4.xpm", &img_width, &img_height);
 	game.player_down = mlx_xpm_file_to_image(game.mlx, "goku3.xpm", &img_width, &img_height);
-	game.player_left = mlx_xpm_file_to_image(game.mlx, "goku2.xpm", &img_width, &img_height);
-	game.player_right = mlx_xpm_file_to_image(game.mlx, "goku1.xpm", &img_width, &img_height);
+	game.player_left = mlx_xpm_file_to_image(game.mlx, "goku_left.xpm", &img_width, &img_height);
+	game.player_right = mlx_xpm_file_to_image(game.mlx, "goku_right.xpm", &img_width, &img_height);
 	game.player_hit_ground = mlx_xpm_file_to_image(game.mlx, "goku5.xpm", &img_width, &img_height);
 	game.current_player = game.player_right;
 	game.collectible_img = mlx_xpm_file_to_image(game.mlx, "collect.xpm", &img_width, &img_height);
-	game.door_img = mlx_xpm_file_to_image(game.mlx, "door.xpm", &img_width, &img_height);
+	
+	game.door_frames[0] = mlx_xpm_file_to_image(game.mlx, "door.xpm", &img_width, &img_height);
+	game.door_frames[1] = mlx_xpm_file_to_image(game.mlx, "door2.xpm", &img_width, &img_height);
+	game.door_frames[2] = mlx_xpm_file_to_image(game.mlx, "door3.xpm", &img_width, &img_height);
+	game.door_frames[3] = mlx_xpm_file_to_image(game.mlx, "door4.xpm", &img_width, &img_height);
+	game.door_frame_index = 0;
 	if (!game.player_up)
 	{
 		write(2, "Error_player_up\n", 16);
@@ -190,10 +226,10 @@ int	main(void)
 		"1000110001",
 		"100C00C001",
 		"1010110111",
-		"1C1C000001",
+		"1C10E00001",
 		"1011111101",
 		"100000C101",
-		"10000001E1",
+		"100C000101",
 		"1111111111"
 	};
 
@@ -219,5 +255,6 @@ int	main(void)
 
 	render_map(&game);
 	mlx_key_hook(game.mlx_window, handle_keypress, &game);
+	mlx_loop_hook(game.mlx, animated_door, &game);
 	mlx_loop(game.mlx);
 }
