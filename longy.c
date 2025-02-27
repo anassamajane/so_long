@@ -7,6 +7,8 @@
 #define TILE_SIZE 64
 #define MAP_HEIGHT 10
 #define MAP_WIDTH 36
+#define STEP_COUNTER_HEIGHT 80
+#define WINDOW_HEIGHT (MAP_HEIGHT * TILE_SIZE + STEP_COUNTER_HEIGHT)
 #define KEY_UP 65362
 #define	KEY_DOWN 65364
 #define	KEY_LEFT 65361
@@ -25,18 +27,27 @@ typedef struct	s_game
 	void	*player_down;
 	void	*player_left;
 	void	*player_right;
-	void	*player_hit_ground;
 	void	*current_player;
 	void	*dead_player;
-
 
 	void	*door_frames[4];
 	int	door_frame_index;
 
-	//void	*collectible_frames[2];
-	//int	collectible_frame_index;
+	void	*collectible_frames[2];
+	void	*collectibles_img;
+	int	collectibles_counter;
+	int	collectibles_frame_index;
 	int	total_collectibles;
 	int	collected;
+
+	void	*enemy;
+	void	*enemy_frames[2];
+	int	enemy_frame_index;
+	int	animation_counter;
+
+	void	*counter_bare;
+	void	*number_images[10];
+	int	step_counter;
 
 	int	player_x;
 	int	player_y;
@@ -46,7 +57,7 @@ typedef struct	s_game
 
 void    render_map(t_game *game);
 void	handle_death(t_game *game);
-
+void    rander_steps_counter(t_game *game, int steps);
 
 int	handle_keypress(int keycode, void *param)
 {
@@ -64,18 +75,15 @@ int	handle_keypress(int keycode, void *param)
 		game->player_y--;
 		game->current_player = game->player_up;
 		handle_death(game);
+		game->step_counter++;
 	}
 
-	else if (keycode == KEY_DOWN)
+	else if (keycode == KEY_DOWN && game->map[game->player_y + 1][game->player_x] != '1' && (game->map[game->player_y + 1][game->player_x] != 'E' || game->collected == game->total_collectibles))
         {
-		if (game->map[game->player_y + 1][game->player_x] == '1' && (game->map[game->player_y + 1][game->player_x] != 'E' || game->collected == game->total_collectibles))
-			game->current_player = game->player_hit_ground;
-		else
-		{
-			game->player_y++;
-			game->current_player = game->player_down;
-		}
+		game->player_y++;
+		game->current_player = game->player_down;
 		handle_death(game);
+		game->step_counter++;
         }
 
 	else if (keycode == KEY_LEFT && game->map[game->player_y][game->player_x - 1] != '1' && (game->map[game->player_y][game->player_x - 1] != 'E' || game->collected == game->total_collectibles))
@@ -83,6 +91,7 @@ int	handle_keypress(int keycode, void *param)
                 game->player_x--;
                 game->current_player = game->player_left;
 		handle_death(game);
+		game->step_counter++;
         }
 
 	else if (keycode == KEY_RIGHT && game->map[game->player_y][game->player_x + 1] != '1' && (game->map[game->player_y][game->player_x + 1] != 'E' || game->collected == game->total_collectibles))
@@ -90,6 +99,7 @@ int	handle_keypress(int keycode, void *param)
                 game->player_x++;
                 game->current_player = game->player_right;
 		handle_death(game);
+		game->step_counter++;
         }
 
 	if (game->map[game->player_y][game->player_x] == 'C')
@@ -111,6 +121,7 @@ int	handle_keypress(int keycode, void *param)
 		exit (0);
 	}
 	render_map(game);
+	rander_steps_counter(game, game->step_counter);
 	return (0);
 }
 
@@ -126,20 +137,20 @@ void	render_map(t_game *game)
 		while (x < MAP_WIDTH)
 		{
 			if (game->map[y][x] == '1')
-				mlx_put_image_to_window(game->mlx, game->mlx_window, game->wall_img, x * TILE_SIZE, y * TILE_SIZE);
+				mlx_put_image_to_window(game->mlx, game->mlx_window, game->wall_img, x * TILE_SIZE, y * TILE_SIZE + STEP_COUNTER_HEIGHT);
 			else if (game->map[y][x] == 'C')
-				mlx_put_image_to_window(game->mlx, game->mlx_window, game->collectible_frames[game->collectible_frame_index], x * TILE_SIZE, y * TILE_SIZE);
+				mlx_put_image_to_window(game->mlx, game->mlx_window, game->collectibles_img, x * TILE_SIZE, y * TILE_SIZE + STEP_COUNTER_HEIGHT);
 			else if (game->map[y][x] == 'E')
-				mlx_put_image_to_window(game->mlx, game->mlx_window, game->door_frames[game->door_frame_index], x * TILE_SIZE, y * TILE_SIZE);
-			//else if (game->map[y][x] == 'X')
-				//mlx_put_image_to_window(game->mlx, game->mlx_window, game->enemy, x * TILE_SIZE, y * TILE_SIZE);
+				mlx_put_image_to_window(game->mlx, game->mlx_window, game->door_frames[game->door_frame_index], x * TILE_SIZE, y * TILE_SIZE + STEP_COUNTER_HEIGHT);
+			else if (game->map[y][x] == 'X')
+				mlx_put_image_to_window(game->mlx, game->mlx_window, game->enemy, x * TILE_SIZE, y * TILE_SIZE + STEP_COUNTER_HEIGHT);
 			else
-				mlx_put_image_to_window(game->mlx, game->mlx_window, game->floor_img, x * TILE_SIZE, y * TILE_SIZE);
+				mlx_put_image_to_window(game->mlx, game->mlx_window, game->floor_img, x * TILE_SIZE, y * TILE_SIZE + STEP_COUNTER_HEIGHT);
 			x++;
 		}
 		y++;
 	}
-	mlx_put_image_to_window(game->mlx, game->mlx_window, game->current_player, game->player_x * TILE_SIZE, game->player_y * TILE_SIZE);
+	mlx_put_image_to_window(game->mlx, game->mlx_window, game->current_player, game->player_x * TILE_SIZE, game->player_y * TILE_SIZE + STEP_COUNTER_HEIGHT);
 }
 
 void	handle_death(t_game *game)
@@ -164,30 +175,81 @@ void	handle_death(t_game *game)
 	}
 }
 
-int	animated_door(void *param)
+
+int	animated_game(void *param)
 {
 	t_game	*game = (t_game *)param;
 
-	if (game->collected == game->total_collectibles && game->door_frame_index < 3)
+	game->animation_counter++;
+	if (game->animation_counter >= 5)
 	{
-		usleep (200000);
-		game->door_frame_index++;
-		render_map(game);
+		game->animation_counter = 0;
+		if (game->enemy_frame_index < 1)
+			game->enemy_frame_index++;
+		else
+			game->enemy_frame_index = 0;
+		game->enemy = game->enemy_frames[game->enemy_frame_index];
 	}
-	if (game->collectible_frame_index == (game->collectible_frame_index + 1) % 2)
-		render_map(game);
+
+	if (game->collected == game->total_collectibles && game->door_frame_index < 3)
+        {
+                game->door_frame_index++;
+		usleep(100000);
+        }
+
+	game->collectibles_counter++;
+	if (game->collectibles_counter >= 5)
+	{
+		game->collectibles_counter = 0;
+		if (game->collectibles_frame_index == 0)
+			game->collectibles_frame_index = 1;
+		else
+			game->collectibles_frame_index = 0;
+		game->collectibles_img = game->collectible_frames[game->collectibles_frame_index];
+	}
+
+	render_map(game);
+	usleep(100000);
 	return (0);
+}
+
+void cleanup_resources(t_game *game)
+{
+    // Freeing images
+    mlx_destroy_image(game->mlx, game->wall_img);
+    mlx_destroy_image(game->mlx, game->floor_img);
+    mlx_destroy_image(game->mlx, game->player_up);
+    mlx_destroy_image(game->mlx, game->player_down);
+    mlx_destroy_image(game->mlx, game->player_left);
+    mlx_destroy_image(game->mlx, game->player_right);
+    mlx_destroy_image(game->mlx, game->dead_player);
+
+    for (int i = 0; i < 4; i++)
+        mlx_destroy_image(game->mlx, game->door_frames[i]);
+
+    for (int i = 0; i < 2; i++)
+        mlx_destroy_image(game->mlx, game->collectible_frames[i]);
+
+    for (int i = 0; i < 4; i++)
+        mlx_destroy_image(game->mlx, game->enemy_frames[i]);
+}
+
+void    rander_steps_counter(t_game *game, int steps)
+{
+        mlx_put_image_to_window(game->mlx, game->mlx_window, game->number_images[(steps / 1000) % 10], 176, 10);
+        mlx_put_image_to_window(game->mlx, game->mlx_window, game->number_images[(steps / 100) % 10], 219, 10);
+        mlx_put_image_to_window(game->mlx, game->mlx_window, game->number_images[(steps / 10) % 10], 261, 10);
+        mlx_put_image_to_window(game->mlx, game->mlx_window, game->number_images[steps % 10], 304 , 10);
 }
 
 int	main(void)
 {
 	t_game	game;
-	void	*image;
 	int		img_width;
 	int		img_height;
 
 	game.mlx = mlx_init();
-	game.mlx_window = mlx_new_window(game.mlx, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE, "Map");
+	game.mlx_window = mlx_new_window(game.mlx, MAP_WIDTH * TILE_SIZE, WINDOW_HEIGHT, "Map");
 
 	game.wall_img = mlx_xpm_file_to_image(game.mlx, "wally.xpm", &img_width, &img_height);
 	game.floor_img = mlx_xpm_file_to_image(game.mlx, "black_floor.xpm", &img_width, &img_height);
@@ -197,14 +259,41 @@ int	main(void)
 		return (1);
 	}
 
-	game.player_up = mlx_xpm_file_to_image(game.mlx, "goku4.xpm", &img_width, &img_height);
-	game.player_down = mlx_xpm_file_to_image(game.mlx, "goku3.xpm", &img_width, &img_height);
+	game.player_up = mlx_xpm_file_to_image(game.mlx, "goku_up.xpm", &img_width, &img_height);
+	game.player_down = mlx_xpm_file_to_image(game.mlx, "goku_down.xpm", &img_width, &img_height);
 	game.player_left = mlx_xpm_file_to_image(game.mlx, "goku_left.xpm", &img_width, &img_height);
 	game.player_right = mlx_xpm_file_to_image(game.mlx, "goku_right.xpm", &img_width, &img_height);
-	game.player_hit_ground = mlx_xpm_file_to_image(game.mlx, "goku5.xpm", &img_width, &img_height);
 	game.dead_player = mlx_xpm_file_to_image(game.mlx, "dead_goku.xpm", &img_width, &img_height);
 	game.current_player = game.player_right;
 
+	game.collectible_frames[0] = mlx_xpm_file_to_image(game.mlx, "Dragonball_up1.xpm", &img_width, &img_height);
+	game.collectible_frames[1] = mlx_xpm_file_to_image(game.mlx, "Dragonball_down.xpm", &img_width, &img_height);
+	game.collectibles_img = game.collectible_frames[0];
+	game.collectibles_frame_index = 0;
+	game.collectibles_counter = 0;
+
+
+	game.counter_bare = mlx_xpm_file_to_image(game.mlx, "counter_bare.xpm", &img_width, &img_height);
+	game.number_images[0] = mlx_xpm_file_to_image(game.mlx, "1.xpm", &img_width, &img_height);
+	game.number_images[1] = mlx_xpm_file_to_image(game.mlx, "2.xpm", &img_width, &img_height);
+	game.number_images[2] = mlx_xpm_file_to_image(game.mlx, "3.xpm", &img_width, &img_height);
+	game.number_images[3] = mlx_xpm_file_to_image(game.mlx, "4.xpm", &img_width, &img_height);
+	game.number_images[4] = mlx_xpm_file_to_image(game.mlx, "5.xpm", &img_width, &img_height);
+	game.number_images[5] = mlx_xpm_file_to_image(game.mlx, "6.xpm", &img_width, &img_height);
+	game.number_images[6] = mlx_xpm_file_to_image(game.mlx, "7.xpm", &img_width, &img_height);
+	game.number_images[7] = mlx_xpm_file_to_image(game.mlx, "8.xpm", &img_width, &img_height);
+	game.number_images[8] = mlx_xpm_file_to_image(game.mlx, "9.xpm", &img_width, &img_height);
+	game.number_images[9] = mlx_xpm_file_to_image(game.mlx, "10.xpm", &img_width, &img_height);
+	game.step_counter = 0;
+	mlx_put_image_to_window(game.mlx, game.mlx_window, game.counter_bare, 0 * TILE_SIZE, 0 * TILE_SIZE);
+
+	game.enemy_frames[0] = mlx_xpm_file_to_image(game.mlx, "black_right.xpm", &img_width, &img_height);
+	game.enemy_frames[1] = mlx_xpm_file_to_image(game.mlx, "black_left.xpm", &img_width, &img_height);
+	//game.enemy_frames[2] = mlx_xpm_file_to_image(game.mlx, "black3.xpm", &img_width, &img_height);
+	//game.enemy_frames[3] = mlx_xpm_file_to_image(game.mlx, "black4.xpm", &img_width, &img_height);
+	game.enemy_frame_index = 0;
+	game.enemy = game.enemy_frames[0];
+	game.animation_counter = 0;
 
 	game.door_frames[0] = mlx_xpm_file_to_image(game.mlx, "door.xpm", &img_width, &img_height);
 	game.door_frames[1] = mlx_xpm_file_to_image(game.mlx, "door2.xpm", &img_width, &img_height);
@@ -212,8 +301,6 @@ int	main(void)
 	game.door_frames[3] = mlx_xpm_file_to_image(game.mlx, "door4.xpm", &img_width, &img_height);
 	game.door_frame_index = 0;
 
-	//game.collectible_frames[0] = mlx_xpm_file_to_image(game.mlx, "Dragonball_down.xpm", &img_width, &img_height);
-	//game.collectible_frames[1] = mlx_xpm_file_to_image(game.mlx, "Dragonball_up.xpm", &img_width, &img_height);
 
 	if (!game.player_up)
 	{
@@ -240,6 +327,7 @@ int	main(void)
                 write(2, "Error_current_player\n", 21);
                 return (1);
         }
+
 
 	char temp_map[MAP_HEIGHT][MAP_WIDTH + 1] = {
     		"111111111111111111111111111111111111",
@@ -276,7 +364,6 @@ int	main(void)
 
 	render_map(&game);
 	mlx_key_hook(game.mlx_window, handle_keypress, &game);
-	mlx_loop_hook(game.mlx, animated_door, &game);
+	mlx_loop_hook(game.mlx, animated_game, &game);
 	mlx_loop(game.mlx);
 }
-
