@@ -350,54 +350,54 @@ int	main(void)
 	game.mlx = mlx_init();
 	game.mlx_window = mlx_new_window(game.mlx, MAP_WIDTH * TILE_SIZE, WINDOW_HEIGHT, "Map");
 
-	game.wall_img = mlx_xpm_file_to_image(game.mlx, "80wall.xpm", &img_width, &img_height);
-	game.floor_img = mlx_xpm_file_to_image(game.mlx, "black_floor.xpm", &img_width, &img_height);
+	game.wall_img = mlx_xpm_file_to_image(game.mlx, "textures/wall_floor/80wall.xpm", &img_width, &img_height);
+	game.floor_img = mlx_xpm_file_to_image(game.mlx, "textures/wall_floor/black_floor.xpm", &img_width, &img_height);
 	if (!game.wall_img || !game.floor_img)
 	{
 		write(2, "Error\n", 6);
 		return (1);
 	}
 
-	game.player_up = mlx_xpm_file_to_image(game.mlx, "goku_up.xpm", &img_width, &img_height);
-	game.player_down = mlx_xpm_file_to_image(game.mlx, "goku_down.xpm", &img_width, &img_height);
-	game.player_left = mlx_xpm_file_to_image(game.mlx, "goku_left.xpm", &img_width, &img_height);
-	game.player_right = mlx_xpm_file_to_image(game.mlx, "goku_right.xpm", &img_width, &img_height);
-	game.dead_player = mlx_xpm_file_to_image(game.mlx, "dead_goku.xpm", &img_width, &img_height);
+	game.player_up = mlx_xpm_file_to_image(game.mlx, "textures/player/goku_up.xpm", &img_width, &img_height);
+	game.player_down = mlx_xpm_file_to_image(game.mlx, "textures/player/goku_down.xpm", &img_width, &img_height);
+	game.player_left = mlx_xpm_file_to_image(game.mlx, "textures/player/goku_left.xpm", &img_width, &img_height);
+	game.player_right = mlx_xpm_file_to_image(game.mlx, "textures/player/goku_right.xpm", &img_width, &img_height);
+	game.dead_player = mlx_xpm_file_to_image(game.mlx, "textures/player/dead_goku.xpm", &img_width, &img_height);
 	game.current_player = game.player_right;
 	game.prev_player_x = game.player_x;
 	game.prev_player_y = game.player_y;
 
-	game.collectible_frames[0] = mlx_xpm_file_to_image(game.mlx, "Dragonball_up1.xpm", &img_width, &img_height);
-	game.collectible_frames[1] = mlx_xpm_file_to_image(game.mlx, "Dragonball_down.xpm", &img_width, &img_height);
+	game.collectible_frames[0] = mlx_xpm_file_to_image(game.mlx, "textures/collectibles/Dragonball_up1.xpm", &img_width, &img_height);
+	game.collectible_frames[1] = mlx_xpm_file_to_image(game.mlx, "textures/collectibles/Dragonball_down.xpm", &img_width, &img_height);
 	game.collectibles_img = game.collectible_frames[0];
 	game.collectibles_frame_index = 0;
 	game.collectibles_counter = 0;
 
 
-	game.counter_bar = mlx_xpm_file_to_image(game.mlx, "counter_bare.xpm", &img_width, &img_height);
-	game.number_images[0] = mlx_xpm_file_to_image(game.mlx, "1.xpm", &img_width, &img_height);
-	game.number_images[1] = mlx_xpm_file_to_image(game.mlx, "2.xpm", &img_width, &img_height);
-	game.number_images[2] = mlx_xpm_file_to_image(game.mlx, "3.xpm", &img_width, &img_height);
-	game.number_images[3] = mlx_xpm_file_to_image(game.mlx, "4.xpm", &img_width, &img_height);
-	game.number_images[4] = mlx_xpm_file_to_image(game.mlx, "5.xpm", &img_width, &img_height);
-	game.number_images[5] = mlx_xpm_file_to_image(game.mlx, "6.xpm", &img_width, &img_height);
-	game.number_images[6] = mlx_xpm_file_to_image(game.mlx, "7.xpm", &img_width, &img_height);
-	game.number_images[7] = mlx_xpm_file_to_image(game.mlx, "8.xpm", &img_width, &img_height);
-	game.number_images[8] = mlx_xpm_file_to_image(game.mlx, "9.xpm", &img_width, &img_height);
-	game.number_images[9] = mlx_xpm_file_to_image(game.mlx, "10.xpm", &img_width, &img_height);
+	game.counter_bar = mlx_xpm_file_to_image(game.mlx, "textures/counter/counter_bare.xpm", &img_width, &img_height);
+	game.number_images[0] = mlx_xpm_file_to_image(game.mlx, "textures/counter/1.xpm", &img_width, &img_height);
+	game.number_images[1] = mlx_xpm_file_to_image(game.mlx, "textures/counter/2.xpm", &img_width, &img_height);
+	game.number_images[2] = mlx_xpm_file_to_image(game.mlx, "textures/counter/3.xpm", &img_width, &img_height);
+	game.number_images[3] = mlx_xpm_file_to_image(game.mlx, "textures/counter/4.xpm", &img_width, &img_height);
+	game.number_images[4] = mlx_xpm_file_to_image(game.mlx, "textures/counter/5.xpm", &img_width, &img_height);
+	game.number_images[5] = mlx_xpm_file_to_image(game.mlx, "textures/counter/6.xpm", &img_width, &img_height);
+	game.number_images[6] = mlx_xpm_file_to_image(game.mlx, "textures/counter/7.xpm", &img_width, &img_height);
+	game.number_images[7] = mlx_xpm_file_to_image(game.mlx, "textures/counter/8.xpm", &img_width, &img_height);
+	game.number_images[8] = mlx_xpm_file_to_image(game.mlx, "textures/counter/9.xpm", &img_width, &img_height);
+	game.number_images[9] = mlx_xpm_file_to_image(game.mlx, "textures/counter/10.xpm", &img_width, &img_height);
 	game.step_counter = 0;
 	mlx_put_image_to_window(game.mlx, game.mlx_window, game.counter_bar, 0 * TILE_SIZE, 0 * TILE_SIZE);
 
-	game.enemy_frames[0] = mlx_xpm_file_to_image(game.mlx, "black_right.xpm", &img_width, &img_height);
-	game.enemy_frames[1] = mlx_xpm_file_to_image(game.mlx, "black_left.xpm", &img_width, &img_height);
+	game.enemy_frames[0] = mlx_xpm_file_to_image(game.mlx, "textures/enemy/black_right.xpm", &img_width, &img_height);
+	game.enemy_frames[1] = mlx_xpm_file_to_image(game.mlx, "textures/enemy/black_left.xpm", &img_width, &img_height);
 	game.enemy_frame_index = 0;
 	game.enemy = game.enemy_frames[0];
 	game.animation_counter = 0;
 
-	game.door_frames[0] = mlx_xpm_file_to_image(game.mlx, "door.xpm", &img_width, &img_height);
-	game.door_frames[1] = mlx_xpm_file_to_image(game.mlx, "door2.xpm", &img_width, &img_height);
-	game.door_frames[2] = mlx_xpm_file_to_image(game.mlx, "door3.xpm", &img_width, &img_height);
-	game.door_frames[3] = mlx_xpm_file_to_image(game.mlx, "door4.xpm", &img_width, &img_height);
+	game.door_frames[0] = mlx_xpm_file_to_image(game.mlx, "textures/door/door.xpm", &img_width, &img_height);
+	game.door_frames[1] = mlx_xpm_file_to_image(game.mlx, "textures/door/door2.xpm", &img_width, &img_height);
+	game.door_frames[2] = mlx_xpm_file_to_image(game.mlx, "textures/door/door3.xpm", &img_width, &img_height);
+	game.door_frames[3] = mlx_xpm_file_to_image(game.mlx, "textures/door/door4.xpm", &img_width, &img_height);
 	game.door_frame_index = 0;
 
 
