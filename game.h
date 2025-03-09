@@ -6,11 +6,10 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <fcntl.h>
+# include <string.h>
 
 # define ESC_KEY 65307
 # define TILE_SIZE 64
-# define MAP_HEIGHT 10
-# define MAP_WIDTH 36
 # define STEP_COUNTER_HEIGHT 80
 # define WINDOW_HEIGHT (MAP_HEIGHT * TILE_SIZE + STEP_COUNTER_HEIGHT)
 # define KEY_UP 65362
@@ -62,10 +61,9 @@ typedef struct	s_game
 	int	prev_player_x;
 	int	prev_player_y;
 
-	char	**mapp;
+	char	**map;
 	int	map_width;
 	int	map_height;
-	char	map[MAP_HEIGHT][MAP_WIDTH + 1];
 
 }	t_game;
 
@@ -118,4 +116,9 @@ char	*ft_strchr(char *str, char search_str);
 
 
 void	read_map(const char *file_name, t_game *game);
+void	check_file_extension(const char *filename);
+void	validate_map_characters(t_game *game);
+void    validate_map_elements(t_game *game);
+void	validate_walls(t_game *game);
+void    validate_path(t_game *game);
 #endif

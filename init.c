@@ -6,7 +6,7 @@ int	init_game(t_game *game)
 	int	img_height;
 
 	game->mlx = mlx_init();
-	game->mlx_window = mlx_new_window(game->mlx, MAP_WIDTH * TILE_SIZE, WINDOW_HEIGHT, "Map");
+	game->mlx_window = mlx_new_window(game->mlx, game->map_width * TILE_SIZE, game->map_height * TILE_SIZE + STEP_COUNTER_HEIGHT, "Map");
 
 	game->wall_img = mlx_xpm_file_to_image(game->mlx, "textures/wall_floor/80wall.xpm", &img_width, &img_height);
 	game->floor_img = mlx_xpm_file_to_image(game->mlx, "textures/wall_floor/black_floor.xpm", &img_width, &img_height);
@@ -20,10 +20,11 @@ int	init_game(t_game *game)
 	game->collectibles_counter = 0;
 	game->collectibles_frame_index = 0;
 	mlx_put_image_to_window(game->mlx, game->mlx_window, game->counter_bar, 0 * TILE_SIZE, 0 *TILE_SIZE);
+	count_collectibles(game);
 	return (0);
 }
 
-void	init_map(t_game *game)
+/*void	init_map(t_game *game)
 {
 	char temp_map[MAP_HEIGHT][MAP_WIDTH + 1] = {
     		"111111111111111111111111111111111111",
@@ -37,18 +38,18 @@ void	init_map(t_game *game)
     		"10000000000000000X00000000000X000001",
     		"111111111111111111111111111111111111"
 	};
-	for (int i = 0; i < MAP_HEIGHT; i++)
-		for (int j = 0; j < MAP_WIDTH; j++)
+	for (int i = 0; i < game->map_height; i++)
+		for (int j = 0; j < game->map_width; j++)
 			game->map[i][j] = temp_map[i][j];
 	count_collectibles(game);
-}
+}*/
 
 void	count_collectibles(t_game *game)
 {
 	game->total_collectibles = 0;
-	for (int y = 0; y < MAP_HEIGHT; y++)
+	for (int y = 0; y < game->map_height; y++)
 	{
-		for (int x = 0; x < MAP_WIDTH; x++)
+		for (int x = 0; x < game->map_width; x++)
 		{
 			if (game->map[y][x] == 'C')
 				game->total_collectibles++;

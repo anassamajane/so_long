@@ -6,10 +6,10 @@ void	render_map(t_game *game)
 	int	y;
 
 	y = 0;
-	while (y < MAP_HEIGHT)
+	while (y < game->map_height)
 	{
 		x = 0;
-		while (x < MAP_WIDTH)
+		while (x < game->map_width)
 		{
 			render_tile(game, x, y);
 			x++;
