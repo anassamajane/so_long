@@ -1,12 +1,26 @@
-#include "game.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   animation.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anaamaja <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/10 23:33:06 by anaamaja          #+#    #+#             */
+/*   Updated: 2025/03/11 00:53:43 by anaamaja         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int	animated_game(void *param)
+#include "game_bonus.h"
+
+int	animated_game(t_game *game)
 {
-	t_game	*game = (t_game *)param;
-	int	redraw_collectibles = 0;
-	int	rredraw_door = 0;
-	int	redraw_enemies = 0;
+	int		redraw_collectibles;
+	int		rredraw_door;
+	int		redraw_enemies;
 
+	redraw_collectibles = 0;
+	rredraw_door = 0;
+	redraw_enemies = 0;
 	update_enemy_animation(game, &redraw_enemies);
 	update_door_animation(game, &rredraw_door);
 	update_collectibles_animation(game, &redraw_collectibles);
@@ -37,7 +51,8 @@ void	update_enemy_animation(t_game *game, int *redraw_enemies)
 
 void	update_door_animation(t_game *game, int *rredraw_door)
 {
-	if (game->collected == game->total_collectibles && game->door_frame_index < 3)
+	if (game->collected == game->total_collectibles && \
+			game->door_frame_index < 3)
 	{
 		game->door_frame_index++;
 		*rredraw_door = 1;
@@ -55,6 +70,7 @@ void	update_collectibles_animation(t_game *game, int *redraw_collectibles)
 		else
 			game->collectibles_frame_index = 0;
 	}
-	game->collectibles_img = game->collectible_frames[game->collectibles_frame_index];
+	game->collectibles_img = \
+		game->collectible_frames[game->collectibles_frame_index];
 	*redraw_collectibles = 1;
 }

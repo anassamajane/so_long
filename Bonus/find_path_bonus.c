@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   find_path.c                                        :+:      :+:    :+:   */
+/*   find_path_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anaamaja <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/10 20:58:57 by anaamaja          #+#    #+#             */
-/*   Updated: 2025/03/10 21:01:03 by anaamaja         ###   ########.fr       */
+/*   Created: 2025/03/10 23:34:57 by anaamaja          #+#    #+#             */
+/*   Updated: 2025/03/11 00:54:00 by anaamaja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "game.h"
+#include "game_bonus.h"
 
 void	ft_free(char **map_copy, int rows)
 {
 	if (!map_copy)
 		return ;
 	while (rows > 0)
-		free (map_copy[--rows]);
+		free(map_copy[--rows]);
 	free(map_copy);
 }
 
@@ -34,10 +34,7 @@ char	**copy_map(t_game *game)
 	{
 		map_copy[y] = ft_strdup(game->map[y]);
 		if (!map_copy[y])
-		{
-			ft_free(map_copy, y);
 			exit(1);
-		}
 		y++;
 	}
 	map_copy[y] = NULL;
@@ -69,7 +66,7 @@ void	find_player_position(t_game *game, int *px, int *py)
 
 void	flood_fill(char **map, int x, int y)
 {
-	if (map[y][x] == '1' || map[y][x] == 'V')
+	if (map[y][x] == '1' || map[y][x] == 'V' || map[y][x] == 'X')
 		return ;
 	map[y][x] = 'V';
 	flood_fill(map, x + 1, y);

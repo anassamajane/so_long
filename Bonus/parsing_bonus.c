@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parsing_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anaamaja <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/10 21:42:50 by anaamaja          #+#    #+#             */
-/*   Updated: 2025/03/10 21:42:52 by anaamaja         ###   ########.fr       */
+/*   Created: 2025/03/11 00:26:30 by anaamaja          #+#    #+#             */
+/*   Updated: 2025/03/11 00:55:18 by anaamaja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "game.h"
+#include "game_bonus.h"
 
 void	free_map_before_exit(t_game *game, int height, char *msg)
 {

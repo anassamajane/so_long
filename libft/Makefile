@@ -10,7 +10,8 @@ SRCS =	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c \
 		ft_address_printf.c ft_check_printf.c ft_hexa_lower_printf.c \
 		ft_hexa_upper_printf.c ft_printf.c ft_putchar_printf.c \
 		ft_putnbr_base_printf.c ft_putnbr_printf.c \
-		ft_putnbr_unsigned_printf.c ft_putstr_printf.c
+		ft_putnbr_unsigned_printf.c ft_putstr_printf.c \
+		get_next_line.c get_next_line_utils.c
 SRCSB = ft_lstnew_bonus.c ft_lstadd_front_bonus.c \
 		ft_lstsize_bonus.c ft_lstlast_bonus.c \
 		ft_lstadd_back_bonus.c ft_lstdelone_bonus.c \
@@ -29,16 +30,16 @@ all: $(NAME)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
-	ar rcs $(NAME) $(OBJS)
+	@ar rcs $(NAME) $(OBJS)
 
 bonus: $(NAME) $(OBJSB)
 	ar rcs $(NAME) $(OBJSB)
 
 clean:
-	rm -f $(OBJS) $(OBJSB)
+	@rm -f $(OBJS) $(OBJSB)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
 

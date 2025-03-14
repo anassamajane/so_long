@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anaamaja <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/10 21:23:54 by anaamaja          #+#    #+#             */
-/*   Updated: 2025/03/10 23:01:59 by anaamaja         ###   ########.fr       */
+/*   Created: 2025/03/11 00:14:04 by anaamaja          #+#    #+#             */
+/*   Updated: 2025/03/13 07:28:32 by anaamaja         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "game.h"
+#include "game_bonus.h"
 
 int	handle_window_close(t_game *game)
 {
@@ -25,9 +25,10 @@ int	main(int ac, char **av)
 
 	if (ac != 2)
 	{
-		ft_printf("Error\nPlease provide a map file\n");
+		ft_printf("Error: Please provide a map file\n");
 		return (1);
 	}
+	ft_bzero(&game, sizeof(game));
 	check_file_extension(av[1]);
 	read_map(av[1], &game);
 	validate_walls(&game);
@@ -38,6 +39,7 @@ int	main(int ac, char **av)
 		return (1);
 	render_map(&game);
 	mlx_key_hook(game.mlx_window, handle_keypress, &game);
+	mlx_loop_hook(game.mlx, animated_game, &game);
 	mlx_hook(game.mlx_window, 17, 0, handle_window_close, &game);
 	mlx_loop(game.mlx);
 	return (0);
